@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>World Map</title>
+
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	
+</head>
+<body>
+	<div id="myDiv" ></div>
+	<script>
+
+		Plotly.d3.json('http://127.0.0.1:5000/world_bank', function(err, rows){
+			function unpack(rows, key) {
+				return rows.map(function(row) { return row[key]; });
+			}
+			
+			var data = [{
+				type: 'choropleth',
+				locationmode: 'country names',
+				locations: unpack(rows, 'countryname'),
+				z: unpack(rows, 'lendprojectcost'),
+				text: unpack(rows, 'project_name'),
+				autocolorscale: true
+
+			}];
+			
+			var layout = {
+				title: 'Projects and sum investment',
+				geo: {
+					projection: {
+						type: 'robinson'
+					}
+				}
+			};
+
+			Plotly.plot(myDiv, data, layout, {showLink: false});
+
+		});
+	</script>
+	
+</body>
+</html>
